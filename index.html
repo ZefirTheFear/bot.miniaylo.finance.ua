@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bot i.ua</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>i.ua BOT</h1>
+      <div class="timeout">
+        <label>Время цикла, сек:</label>
+        <input type="number" id="timeoutInput" value="300" />
+      </div>
+      <div>
+        <div class="curOption"><label>usd</label><input type="checkbox" checked id="usdInp" /></div>
+        <div class="curOption"><label>eur</label><input type="checkbox" checked id="eurInp" /></div>
+        <div class="curOption"><label>rub</label><input type="checkbox" checked id="rubInp" /></div>
+      </div>
+      <button type="button" id="start">Start</button>
+    </main>
+
+    <script src="index.js"></script>
+  </body>
+</html>
