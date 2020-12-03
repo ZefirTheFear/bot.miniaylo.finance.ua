@@ -1,9 +1,5 @@
 // create ads
 // ----- https://miniaylo.finance.ua/add* ------
-const deleteCookie = (cookieName) => {
-  document.cookie = `${cookieName}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=finance.ua`;
-};
-
 const accNumber = new URLSearchParams(window.location.search).get("accNumber");
 const adType = new URLSearchParams(window.location.search).get("adType");
 const startingAdType = new URLSearchParams(window.location.search).get("startingAdType");
@@ -42,11 +38,8 @@ const accs = [
 
 const startNewCycle = () => {
   window.location.replace(
-    `https://miniaylo.finance.ua/remove?accNumber=1&adType=${startingAdType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}`
+    `https://miniaylo.finance.ua/remove?accNumber=1&adType=${startingAdType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}&accsAmount=${accs.length}`
   );
-  // window.location.replace(
-  //   `https://miniaylo.finance.ua/add?accNumber=1&adType=${startingAdType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}`
-  // );
 };
 
 const adTypes = [];
@@ -80,9 +73,10 @@ const addNewAd = async (acc, adType) => {
     // const errText = document.querySelectorAll(".error-list")[8].querySelector("li").innerText;
     // if (mutationsList.length > 0 && errText.indexOf("Ви вже розміщували заявку") > -1) {
     if (mutationsList.length > 0) {
-      setTimeout(() => {
-        window.location.reload();
-      }, 5 * 1000);
+      // go and delete one more time
+      window.location.replace(
+        `https://miniaylo.finance.ua/remove?accNumber=${accNumber}&adType=${adType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}&accsAmount=${accs.length}&mode=oneTime`
+      );
     }
   };
   const observerForErrDiv = new MutationObserver(callbackForErrDiv);
@@ -101,7 +95,7 @@ const addNewAd = async (acc, adType) => {
         proposalNumber: proposalNumber,
         removalCode: removalCode
       };
-      document.cookie = `ad11=${JSON.stringify(ad)};path=/;domain=finance.ua`;
+      document.cookie = `ad${accNumber}${adType}=${JSON.stringify(ad)};path=/;domain=finance.ua`;
 
       const msgDiv = document.querySelectorAll(".error-list")[9];
       const callbackforMsgDiv = (mutationsList, observer) => {
@@ -114,7 +108,6 @@ const addNewAd = async (acc, adType) => {
             `https://miniaylo.finance.ua/add?accNumber=${nextAccNumber}&adType=${nextAdType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}`
           );
         } else {
-          deleteCookie(`ad${accNumber}${adType}`);
           window.location.reload();
         }
       };
@@ -122,9 +115,9 @@ const addNewAd = async (acc, adType) => {
       observerForMsgDiv.observe(msgDiv, observerConfig);
 
       // activate
-      // document.body.querySelector("#currency_proposal_activate_by_pin_code_pin_code").value =
-      //   acc.activationCode;
-      // document.body.querySelectorAll(".button")[2].click();
+      document.body.querySelector("#currency_proposal_activate_by_pin_code_pin_code").value =
+        acc.activationCode;
+      document.body.querySelectorAll(".button")[2].click();
     }
   };
 
@@ -165,8 +158,7 @@ const addNewAd = async (acc, adType) => {
   await getRates();
 
   // город
-  // document.querySelector('.major-location-list').querySelectorAll('li')[0].click();
-  document.querySelector(".major-location-list").querySelectorAll("li")[2].click();
+  document.querySelector(".major-location-list").querySelectorAll("li")[0].click();
 
   // тип заявки
   if (adType === "1" || adType === "3" || adType === "5") {
@@ -265,7 +257,7 @@ const addNewAd = async (acc, adType) => {
   // document.body.querySelector('#currency_proposal_expired_at').querySelector('option[value="' + expires + '"]').selected = true;
   document
     .querySelector("#currency_proposal_expired_at")
-    .querySelector('option[value="24"]').selected = true;
+    .querySelector('option[value="21"]').selected = true;
   document.querySelectorAll(".ik_select_link_text")[2].click();
   document.body.click();
 
@@ -274,7 +266,6 @@ const addNewAd = async (acc, adType) => {
 };
 
 const createNewAdOrStartNewCycle = () => {
-  console.log("Loaded!!!!");
   if (accNumber > accs.length) {
     setTimeout(startNewCycle, 1000 * timeout);
   } else {
@@ -287,10 +278,13 @@ window.addEventListener("load", createNewAdOrStartNewCycle);
 
 // remove ads
 // ----- https://miniaylo.finance.ua/remove* ------
-const deleteCookie = (cookieName) => {
-  document.cookie = `${cookieName}= ; expires = Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=finance.ua`;
+const getCookie = (cookieName) => {
+  const results = document.cookie.match("(^|;) ?" + cookieName + "=([^;]*)(;|$)");
+  if (results) return unescape(results[2]);
+  else return null;
 };
 
+const accsAmount = new URLSearchParams(window.location.search).get("accsAmount");
 const accNumber = new URLSearchParams(window.location.search).get("accNumber");
 const adType = new URLSearchParams(window.location.search).get("adType");
 const startingAdType = new URLSearchParams(window.location.search).get("startingAdType");
@@ -300,4 +294,65 @@ const usd = new URLSearchParams(window.location.search).get("usd");
 const eur = new URLSearchParams(window.location.search).get("eur");
 const rub = new URLSearchParams(window.location.search).get("rub");
 
+const mode = new URLSearchParams(window.location.search).get("mode");
+
+const adTypes = [];
+if (usd === "true") {
+  adTypes.push("1");
+  adTypes.push("2");
+}
+if (eur === "true") {
+  adTypes.push("3");
+  adTypes.push("4");
+}
+if (rub === "true") {
+  adTypes.push("5");
+  adTypes.push("6");
+}
+
+let nextAccNumber;
+let nextAdType;
+if (adTypes.indexOf(adType) === adTypes.length - 1) {
+  nextAccNumber = +accNumber + 1;
+  nextAdType = adTypes[0];
+} else {
+  nextAccNumber = accNumber;
+  nextAdType = adTypes[adTypes.indexOf(adType) + 1];
+}
+
+const startNewCycle = () => {
+  window.location.replace(
+    `https://miniaylo.finance.ua/add?accNumber=1&adType=${startingAdType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}`
+  );
+};
+
+const deleteAd = () => {
+  const adInfo = JSON.parse(getCookie(`ad${accNumber}${adType}`));
+
+  document.querySelector("#currency_proposal_remove_proposal_id").value = adInfo.proposalNumber;
+  document.querySelector("#currency_proposal_remove_removal_code").value = adInfo.removalCode;
+  document.body.querySelector('div[data-role="submit"]').click();
+
+  if (mode === "oneTime") {
+    setTimeout(() => {
+      window.location.replace(
+        `https://miniaylo.finance.ua/add?accNumber=${accNumber}&adType=${adType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}`
+      );
+    }, 1000 * 15);
+  } else {
+    window.location.replace(
+      `https://miniaylo.finance.ua/remove?accNumber=${nextAccNumber}&adType=${nextAdType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}&accsAmount=${accsAmount}`
+    );
+  }
+};
+
+const deleteAdOrStartNewCycle = () => {
+  if (accNumber > accsAmount) {
+    startNewCycle();
+  } else {
+    deleteAd();
+  }
+};
+
+window.addEventListener("load", deleteAdOrStartNewCycle);
 // ------------------------------------------------
