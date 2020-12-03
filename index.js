@@ -13,13 +13,21 @@ const validate = () => {
 
 validate();
 
+let startingAdType = 1;
 const onChangeInp = () => {
   validate();
+  if (usdInp.checked) {
+    startingAdType = 1;
+  } else if (eurInp.checked) {
+    startingAdType = 3;
+  } else {
+    startingAdType = 5;
+  }
 };
 
 const start = () => {
-  const loginUrl = `https://passport.i.ua/login/?acc=1&timeout=${timeoutInput.value}&usd=${usdInp.checked}&eur=${eurInp.checked}&rub=${rubInp.checked}`;
-  window.open(loginUrl);
+  const newAddUrl = `https://miniaylo.finance.ua/add?accNumber=1&adType=${startingAdType}&timeout=${timeoutInput.value}&usd=${usdInp.checked}&eur=${eurInp.checked}&rub=${rubInp.checked}&startingAdType=${startingAdType}`;
+  window.open(newAddUrl);
 };
 
 startBtn.addEventListener("click", start);
