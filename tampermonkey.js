@@ -341,14 +341,18 @@ const deleteAd = () => {
     }, 1000 * 15);
   } else {
     window.location.replace(
-      `https://miniaylo.finance.ua/remove?accNumber=${nextAccNumber}&adType=${nextAdType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}&accsAmount=${accsAmount}`
+      `https://miniaylo.finance.ua/remove?accNumber=${nextAccNumber}&adType=${nextAdType}&timeout=${timeout}&usd=${usd}&eur=${eur}&rub=${rub}&startingAdType=${startingAdType}&accsAmount=${accsAmount}&mode=${mode}`
     );
   }
 };
 
 const deleteAdOrStartNewCycle = () => {
   if (accNumber > accsAmount) {
-    startNewCycle();
+    if (mode === "stop") {
+      window.close();
+    } else {
+      startNewCycle();
+    }
   } else {
     deleteAd();
   }

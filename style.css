@@ -80,17 +80,27 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
-#start {
-  background: #edff21;
+#start,
+#stop {
+  width: 200px;
   padding: 0.25em 0.5rem;
   border-radius: 5px;
   margin: 0.5rem;
   cursor: pointer;
   transition: all 0.15s;
 }
-
+#start {
+  background: #09ff00;
+}
 #start:hover {
-  background: #838f00;
+  background: #068502;
+}
+
+#stop {
+  background: #ff3131;
+}
+#stop:hover {
+  background: #9e1f1f;
 }
 
 #start:disabled {
